@@ -3,34 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Décide pour moi — Support</title>
+<title>Décide pour moi · Let the Wheel Decide — Support</title>
 <style>
   :root { --accent: #4F52C9; }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0; padding: 2rem 1.25rem; line-height: 1.6;
+    margin: 0; padding: 2rem 1.25rem; line-height: 1.65;
     color: #1c1c1e; background: #f7f7f8;
   }
   main { max-width: 640px; margin: 0 auto; }
   h1 { color: var(--accent); font-size: 1.7rem; }
+  h2 { font-size: 1.1rem; margin-top: 1.75rem; }
+  a { color: var(--accent); }
+  .updated { font-size: .85rem; color: #6e6e73; }
+  .lead { font-weight: 600; }
+  footer { margin-top: 2.5rem; font-size: .85rem; color: #6e6e73; }
+  /* Sélecteur de langue. Sans JavaScript, les deux versions restent
+     affichées : mieux vaut une page longue qu'une page illisible. */
+  .langues { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+  /* `display: flex` l'emporterait sur l'attribut `hidden` : sans ce
+     rappel, le sélecteur s'afficherait avant que le script ne l'arme. */
+  .langues[hidden] { display: none; }
+  .langues button {
+    font: inherit; font-size: .85rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--accent); background: transparent; color: var(--accent);
+  }
+  .langues button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .separateur { margin: 3rem 0 0; border: 0; border-top: 1px solid #d8d8dc; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1c1c1e; color: #f2f2f7; }
+    a { color: #9a9df2; }
+    .updated, footer { color: #98989e; }
+    .langues button { border-color: #9a9df2; color: #9a9df2; }
+    .langues button[aria-pressed="true"] { background: #9a9df2; color: #1c1c1e; }
+    .separateur { border-top-color: #3a3a3c; }
+  }
   .card {
     background: #fff; border-radius: 14px; padding: 1.25rem 1.5rem;
     margin: 1rem 0; box-shadow: 0 1px 4px rgba(0,0,0,.06);
   }
-  a { color: var(--accent); font-weight: 600; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  footer { margin-top: 2rem; font-size: .85rem; color: #6e6e73; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #1c1c1e; color: #f2f2f7; }
-    .card { background: #2c2c2e; }
-    a { color: #9a9df2; }
-    footer { color: #98989e; }
-  }
+  .card a { font-weight: 600; text-decoration: none; }
+  .card a:hover { text-decoration: underline; }
+  @media (prefers-color-scheme: dark) { .card { background: #2c2c2e; } }
 </style>
 </head>
 <body>
 <main>
+  <div class="langues" hidden>
+    <button type="button" data-langue="fr" aria-pressed="true">Français</button>
+    <button type="button" data-langue="en" aria-pressed="false">English</button>
+  </div>
+
+  <section data-langue="fr" lang="fr">
   <h1>Décide pour moi</h1>
   <p>Une roue personnalisable pour trancher n'importe quoi en un geste : qui fait la vaisselle, quel resto ce soir, quel élève passe au tableau. Sans compte, sans publicité tierce : <strong>vos roues et vos tirages restent sur votre iPhone.</strong></p>
 
@@ -41,6 +67,52 @@
   </div>
 
   <footer>Décide pour moi est une application de divertissement et d'aide au choix. Les tirages sont vraiment aléatoires ; les décisions restent les vôtres.</footer>
+  </section>
+
+  <hr class="separateur">
+
+  <section data-langue="en" lang="en">
+  <h1>Let the Wheel Decide</h1>
+  <p>A customisable wheel to settle anything in one flick: who does the dishes, where to eat tonight, which pupil goes to the board. No account, no third-party ads: <strong>your wheels and your draws stay on your iPhone.</strong></p>
+
+  <div class="card">
+    <p><a href="confidentialite.html">Privacy Policy</a></p>
+    <p><a href="conditions.html">Terms of Use</a></p>
+    <p>Contact: <a href="mailto:contact@steverover.com">contact@steverover.com</a></p>
+  </div>
+
+  <footer>Let the Wheel Decide is an entertainment and decision-making app. The draws are genuinely random; the decisions remain yours.</footer>
+  </section>
 </main>
+<script>
+  // Affiche une seule langue, celle du navigateur par défaut. Le sélecteur
+  // n'apparaît que si le script tourne : sans lui, les deux versions
+  // restent lisibles, ce qui vaut mieux qu'une page vide.
+  (function () {
+    var sections = document.querySelectorAll('[data-langue]');
+    var barre = document.querySelector('.langues');
+    var separateur = document.querySelector('.separateur');
+    if (!sections.length || !barre) return;
+
+    function montrer(code) {
+      sections.forEach(function (section) {
+        section.hidden = section.dataset.langue !== code;
+      });
+      barre.querySelectorAll('button').forEach(function (bouton) {
+        bouton.setAttribute('aria-pressed', String(bouton.dataset.langue === code));
+      });
+      document.documentElement.lang = code;
+      if (separateur) separateur.hidden = true;
+    }
+
+    barre.hidden = false;
+    barre.addEventListener('click', function (evenement) {
+      var bouton = evenement.target.closest('button');
+      if (bouton) montrer(bouton.dataset.langue);
+    });
+
+    montrer((navigator.language || 'fr').toLowerCase().startsWith('fr') ? 'fr' : 'en');
+  })();
+</script>
 </body>
 </html>

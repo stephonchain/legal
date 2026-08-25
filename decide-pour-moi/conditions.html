@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Conditions d'utilisation — Décide pour moi</title>
+<title>Conditions d'utilisation · Terms of Use — Décide pour moi</title>
 <style>
   :root { --accent: #4F52C9; }
   * { box-sizing: border-box; }
@@ -17,18 +17,41 @@
   h2 { font-size: 1.1rem; margin-top: 1.75rem; }
   a { color: var(--accent); }
   .updated { font-size: .85rem; color: #6e6e73; }
+  .lead { font-weight: 600; }
   footer { margin-top: 2.5rem; font-size: .85rem; color: #6e6e73; }
+  /* Sélecteur de langue. Sans JavaScript, les deux versions restent
+     affichées : mieux vaut une page longue qu'une page illisible. */
+  .langues { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+  /* `display: flex` l'emporterait sur l'attribut `hidden` : sans ce
+     rappel, le sélecteur s'afficherait avant que le script ne l'arme. */
+  .langues[hidden] { display: none; }
+  .langues button {
+    font: inherit; font-size: .85rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--accent); background: transparent; color: var(--accent);
+  }
+  .langues button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .separateur { margin: 3rem 0 0; border: 0; border-top: 1px solid #d8d8dc; }
   @media (prefers-color-scheme: dark) {
     body { background: #1c1c1e; color: #f2f2f7; }
     a { color: #9a9df2; }
     .updated, footer { color: #98989e; }
+    .langues button { border-color: #9a9df2; color: #9a9df2; }
+    .langues button[aria-pressed="true"] { background: #9a9df2; color: #1c1c1e; }
+    .separateur { border-top-color: #3a3a3c; }
   }
 </style>
 </head>
 <body>
 <main>
+  <div class="langues" hidden>
+    <button type="button" data-langue="fr" aria-pressed="true">Français</button>
+    <button type="button" data-langue="en" aria-pressed="false">English</button>
+  </div>
+
+  <section data-langue="fr" lang="fr">
   <h1>Conditions d'utilisation</h1>
-  <p class="updated">Décide pour moi — Dernière mise à jour : 21 août 2026</p>
+  <p class="updated">Décide pour moi — Dernière mise à jour : 23 août 2026</p>
 
   <h2>1. Objet</h2>
   <p>Décide pour moi est une application iOS de divertissement et d'aide au choix : une roue personnalisable qui tire une option au hasard parmi celles que vous définissez. L'utilisation de l'application vaut acceptation des présentes conditions.</p>
@@ -67,6 +90,82 @@
   <p>Pour toute question : <a href="mailto:contact@steverover.com">contact@steverover.com</a></p>
 
   <footer><a href="index.html">← Retour</a></footer>
+  </section>
+
+  <hr class="separateur">
+
+  <section data-langue="en" lang="en">
+  <h1>Terms of Use</h1>
+  <p class="updated">Let the Wheel Decide — Last updated: 23 August 2026</p>
+
+  <h2>1. Purpose</h2>
+  <p>Let the Wheel Decide (published in French as « Décide pour moi ») is an iOS entertainment and decision-making app: a customisable wheel that draws one option at random from those you define. Using the app constitutes acceptance of these terms.</p>
+
+  <h2>2. A random draw, not advice</h2>
+  <p>Results come from a genuinely random draw, weighted according to your own settings where applicable. They are neither advice nor a recommendation. Any decision you make on the basis of a draw is your sole responsibility. The app is not a gambling app and must not be used to run bets or paid lotteries.</p>
+
+  <h2>3. Free and premium</h2>
+  <p>The app is free to use with one wheel and the standard draw mode. Premium unlocks every feature: unlimited wheels, all draw modes, option weighting, history and additional colour palettes.</p>
+
+  <h2>4. Purchases, subscriptions and free trial</h2>
+  <p>Premium comes in three forms: a weekly subscription, a monthly subscription and a one-time lifetime purchase. The prices displayed in the app prevail.</p>
+  <p>Subscriptions are billed through your App Store account and renew automatically unless cancelled at least 24 hours before the end of the current period. They can be cancelled at any time in your App Store account settings. The monthly subscription may include a free trial; unless cancelled before the trial ends, the paid subscription starts automatically at its term.</p>
+  <p>The lifetime purchase is a one-time payment with no renewal. It does not by itself end an ongoing subscription: that must be cancelled separately, and the app helps you do so after the purchase.</p>
+  <p>Refund requests are handled by Apple under its own terms, at <a href="https://reportaproblem.apple.com" rel="noopener">reportaproblem.apple.com</a>.</p>
+
+  <h2>5. Your content</h2>
+  <p>The wheels and options you create belong to you and remain stored on your device. You alone are responsible for their content, including when you share them as text.</p>
+
+  <h2>6. Intellectual property</h2>
+  <p>The app, its name, its icon and its interface are protected by copyright. Any unauthorised reproduction or reverse engineering is prohibited.</p>
+
+  <h2>7. Limitation of liability</h2>
+  <p>The app is provided "as is". To the extent permitted by law, the publisher cannot be held liable for direct or indirect damages arising from its use, including the consequences of decisions made on the basis of a draw.</p>
+
+  <h2>8. Changes to these terms</h2>
+  <p>These terms may change along with the app. The version in force is the one published at this address; the update date appears at the top of the page.</p>
+
+  <h2>9. Governing law</h2>
+  <p>These terms are governed by French law. Any dispute falls under the jurisdiction of the competent French courts.</p>
+
+  <h2>10. Publisher</h2>
+  <p>Let the Wheel Decide is published by Steve Rover.</p>
+
+  <h2>11. Contact</h2>
+  <p>Any question: <a href="mailto:contact@steverover.com">contact@steverover.com</a></p>
+
+  <footer><a href="index.html">← Back</a></footer>
+  </section>
 </main>
+<script>
+  // Affiche une seule langue, celle du navigateur par défaut. Le sélecteur
+  // n'apparaît que si le script tourne : sans lui, les deux versions
+  // restent lisibles, ce qui vaut mieux qu'une page vide.
+  (function () {
+    var sections = document.querySelectorAll('[data-langue]');
+    var barre = document.querySelector('.langues');
+    var separateur = document.querySelector('.separateur');
+    if (!sections.length || !barre) return;
+
+    function montrer(code) {
+      sections.forEach(function (section) {
+        section.hidden = section.dataset.langue !== code;
+      });
+      barre.querySelectorAll('button').forEach(function (bouton) {
+        bouton.setAttribute('aria-pressed', String(bouton.dataset.langue === code));
+      });
+      document.documentElement.lang = code;
+      if (separateur) separateur.hidden = true;
+    }
+
+    barre.hidden = false;
+    barre.addEventListener('click', function (evenement) {
+      var bouton = evenement.target.closest('button');
+      if (bouton) montrer(bouton.dataset.langue);
+    });
+
+    montrer((navigator.language || 'fr').toLowerCase().startsWith('fr') ? 'fr' : 'en');
+  })();
+</script>
 </body>
 </html>
