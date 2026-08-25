@@ -114,7 +114,9 @@
   // n'apparaît que si le script tourne : sans lui, les deux versions
   // restent lisibles, ce qui vaut mieux qu'une page vide.
   (function () {
-    var sections = document.querySelectorAll('[data-langue]');
+    // Bien viser les sections : les boutons du sélecteur portent le même
+    // attribut, et se masqueraient l'un l'autre.
+    var sections = document.querySelectorAll('section[data-langue]');
     var barre = document.querySelector('.langues');
     var separateur = document.querySelector('.separateur');
     if (!sections.length || !barre) return;
